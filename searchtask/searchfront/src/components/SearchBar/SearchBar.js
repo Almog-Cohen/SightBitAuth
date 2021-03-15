@@ -77,6 +77,7 @@ const SearchBar = () => {
       );
       setCountries(res.data);
     } catch (error) {
+      console.log(error);
       setCountries(["Not Exists"]);
     }
   };
