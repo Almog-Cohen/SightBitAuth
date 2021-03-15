@@ -73,11 +73,11 @@ const SearchBar = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        `https://searchbarback.herokuapp.com/${searchInput}`
+        `https://searchbarback.herokuapp.com/countries/${searchInput}`
       );
+
       setCountries(res.data);
     } catch (error) {
-      console.log(error);
       setCountries(["Not Exists"]);
     }
   };
