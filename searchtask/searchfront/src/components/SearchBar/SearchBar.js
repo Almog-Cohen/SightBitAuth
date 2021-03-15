@@ -73,7 +73,7 @@ const SearchBar = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:3001/countries/${searchInput}`
+        `https://searchbarback.herokuapp.com/${searchInput}`
       );
       setCountries(res.data);
     } catch (error) {
