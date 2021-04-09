@@ -16,7 +16,7 @@ const USER_NOT_EXSISTS = "User not exists";
 const SignIn = ({ setUserName }) => {
   const history = useHistory();
 
-  const [fetchError, setFetchError] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const formik = useFormik({
@@ -43,11 +43,11 @@ const SignIn = ({ setUserName }) => {
 
     switch (userAuth) {
       case USER_NOT_EXSISTS:
-        setFetchError(USER_NOT_EXSISTS);
+        setError(USER_NOT_EXSISTS);
 
         break;
       case INCRORRENT_PASSWORD:
-        setFetchError(INCRORRENT_PASSWORD);
+        setError(INCRORRENT_PASSWORD);
 
         break;
 
@@ -95,7 +95,11 @@ const SignIn = ({ setUserName }) => {
                 value={formik.values.password}
               />
             </div>
-
+            {error && (
+              <p className="card-input" style={{ color: "red" }}>
+                {error}
+              </p>
+            )}
             <div className="card-input">
               {isLoading ? (
                 <CircularProgress color="secondary" />

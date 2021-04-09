@@ -20,7 +20,8 @@ const Chat = ({ roomNumber, userName }) => {
   const [users, setUsers] = useState([]);
 
   const [message, setMessage] = useState("");
-  const [{ messages, roomName }, dispatch] = useStateValue();
+  const [{ messages }, dispatch] = useStateValue();
+
   console.log("CHATS RENDERINGH");
 
   const addToMessages = (message) => {
@@ -50,14 +51,14 @@ const Chat = ({ roomNumber, userName }) => {
     const fetchData = async () => {
       try {
         const messagesData = await axios.get(
-          `http://localhost:3001/chat/${roomName}`
+          `http://localhost:3001/chat/${roomNumber}`
         );
         console.log("DATA CURVED", messagesData.data);
         messagesData.data.length > 0 && addFetchMessages(messagesData.data);
 
         socket = io(END_POINT, connectionOptions);
 
-        socket.emit("join", { name: userName, room: roomName }, (error) => {
+        socket.emit("join", { name: userName, room: roomNumber }, (error) => {
           if (error) {
             alert(error);
           }
@@ -78,12 +79,12 @@ const Chat = ({ roomNumber, userName }) => {
     fetchData();
 
     return () => {
-      socket.emit("disconnected", { name: userName, room: roomName });
+      socket.emit("disconnected", { name: userName, room: roomNumber });
       socket.disconnect();
 
       clearMessages();
     };
-  }, [roomName]);
+  }, [roomNumber]);
 
   const sendMessage = (event) => {
     event.preventDefault();
@@ -92,7 +93,7 @@ const Chat = ({ roomNumber, userName }) => {
         "sendMessage",
         {
           name: userName,
-          room: roomName,
+          room: roomNumber,
           message,
           timestamp: new Date().getTime(),
         },
@@ -146,7 +147,7 @@ const Chat = ({ roomNumber, userName }) => {
 
   const checkUserExists = async () => {
     const responseUserExists = await axios.post(
-      `http://localhost:3001/playerExists/${roomName}`,
+      `http://localhost:3001/playerExists/${roomNumber}`,
       {
         userName: userName,
       }
@@ -166,7 +167,7 @@ const Chat = ({ roomNumber, userName }) => {
         <Avatar />
 
         <div className="chat-header-info">
-          <h3>Room {roomName}</h3>
+          <h3>Room {roomNumber}</h3>
           {users && users.map((user) => ` ,${user}`)}
         </div>
       </div>
@@ -190,7 +191,7 @@ const Chat = ({ roomNumber, userName }) => {
           ))}
         {!userExsits && (
           <p>
-            Welcome {userName} to room {roomName}
+            Welcome {userName} to room {roomNumber}
           </p>
         )}
       </div>

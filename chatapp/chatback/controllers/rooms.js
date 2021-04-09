@@ -8,21 +8,17 @@ const handleGetRoomMessages = async (req, res) => {
   return res.json(chats);
 };
 
-const handleCreateRoom = async (req, res) => {
-  const { room, name } = req.body;
-  console.log("SERVER ROOm ", room, name);
+const handleIsRoomExist = async (req, res) => {
   const db = req.app.locals.db;
-  const database = db.db("rooms");
-  const chats = await database.collection(room).insertOne({ name });
-  console.log("NEW ROOM CREATED");
-  res.json("ROOM IS CREATED");
-};
+  const { room } = req.params;
 
-const handleGetRoomsList = async (req, res) => {
-  const db = req.app.locals.db;
+  const database = db.db("rooms");
+  const rooms = await database.listCollections({ name: room }).toArray();
+
+  return res.json(rooms.length > 0);
 };
 
 module.exports = {
   handleGetRoomMessages: handleGetRoomMessages,
-  handleCreateRoom: handleCreateRoom,
+  handleIsRoomExist: handleIsRoomExist,
 };

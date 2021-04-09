@@ -24,8 +24,8 @@ router.get("/chat/:room", (req, res) => {
   rooms.handleGetRoomMessages(req, res);
 });
 
-router.post("/createroom", (req, res) => {
-  rooms.handleCreateRoom(req, res);
+router.get("/isroomexist/:room", (req, res) => {
+  rooms.handleIsRoomExist(req, res);
 });
 
 module.exports = router;

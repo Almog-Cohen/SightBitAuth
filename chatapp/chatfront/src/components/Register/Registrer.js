@@ -13,14 +13,14 @@ import {
   validateEmail,
 } from "../../utils/formValidation";
 
-const INCRORRENT_PASSWORD = "Incorrect password";
-const USER_NOT_EXSISTS = "User not exists";
+const USER_EXISTS = "User exists";
+const SUCCUESS = "success";
 
 const Register = ({ setUserName }) => {
   const history = useHistory();
 
-  const [fetchError, setFetchError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const formik = useFormik({
     initialValues: {
@@ -45,12 +45,10 @@ const Register = ({ setUserName }) => {
     setIsLoading(true);
     const response = await register(values);
     setIsLoading(false);
-    console.log(response);
-    if (response === "User exists") {
-      setFetchError(response);
-    } else if (response === "success") {
+    if (response === USER_EXISTS) {
+      setError(response);
+    } else if (response === SUCCUESS) {
       /// add token
-      console.log("happns setting username");
 
       setUserName(values.username);
       history.push("/chat");
@@ -105,6 +103,11 @@ const Register = ({ setUserName }) => {
               />
             </div>
 
+            {error && (
+              <p className="card-input" style={{ color: "red" }}>
+                {error}
+              </p>
+            )}
             <div className="card-input">
               {isLoading ? (
                 <CircularProgress color="secondary" />

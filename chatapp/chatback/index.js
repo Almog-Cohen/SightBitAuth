@@ -9,6 +9,7 @@ const {
   removeUserFromRoom,
   getUsersInRoom,
   addNewChatMessage,
+  getRoomsList,
 } = require("./users");
 
 let client;
@@ -36,7 +37,7 @@ MongoClient.connect(
 
 // Connecting the client with the server
 io.on("connection", (socket) => {
-  console.log("We have new connection!!!");
+  console.log("We have new connection!!!   ", socket.id);
 
   // Add new user to DB (array) and connecting him to the room
   socket.on("join", async ({ name, room }, callback) => {
@@ -50,7 +51,7 @@ io.on("connection", (socket) => {
     });
 
     const users = await getUsersInRoom(client, room);
-    // Sending message to everyone in the room besides the admin/user
+    // Sending message to everyone in the room besides the admin/use
     socket.broadcast.to(user.room).emit("message", {
       _id: "a",
       message: `${user.name}, has joined`,
@@ -63,6 +64,18 @@ io.on("connection", (socket) => {
     });
 
     callback();
+  });
+
+  socket.on("rooms", () => {
+    // if (name && room) {
+    //   const user = await addUserToRoom(client, name, room);
+    //   console.log("this is user: ", user);
+    // }
+    setTimeout(async () => {
+      const roomsList = await getRoomsList(client);
+      // Sending message to the user
+      io.emit("rooms", roomsList);
+    }, 500);
   });
 
   //   Getting the message from the frontend
@@ -87,7 +100,6 @@ io.on("connection", (socket) => {
     const user = await removeUserFromRoom(client, name, room);
     const users = await getUsersInRoom(client, room);
 
-    console.log(users, "CHECK FUNCTION USERs", user);
     if (user && users) {
       io.to(room).emit("message", {
         name: "Chat system",

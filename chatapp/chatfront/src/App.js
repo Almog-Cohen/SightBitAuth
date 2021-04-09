@@ -15,8 +15,8 @@ import { useStateValue } from "./StateProvider";
 function App() {
   const [roomNumber, setRoomNumber] = useState("");
   const [userName, setUserName] = useState("");
-  const [{ roomName }, dispatch] = useStateValue();
-  console.log("APP IS RENDERS ", roomName);
+  // const [{ roomName }, dispatch] = useStateValue();
+  console.log("APP IS RENDERS ");
 
   return (
     <div className="App">
@@ -32,7 +32,9 @@ function App() {
           <Route path="/chat">
             <div className="app-body">
               <Sidebar setRoomNumber={setRoomNumber} userName={userName} />
-              {roomName && <Chat roomNumber={roomNumber} userName={userName} />}
+              {roomNumber && (
+                <Chat roomNumber={roomNumber} userName={userName} />
+              )}
             </div>
           </Route>
           <Route path="/">

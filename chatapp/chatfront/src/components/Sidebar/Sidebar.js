@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Sidebar.css";
 import CreateRoom from "../Modal/CreateRoom";
 import SidebarChat from "./SidebarChat";
@@ -8,29 +8,53 @@ import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { useStateValue } from "../../StateProvider";
+import io from "socket.io-client";
 
 const styles = {
   width: "100%",
 };
 
-const Sidebar = ({ setRoomNumber, userName }) => {
+const END_POINT = "localhost:3001";
+let socket;
+const connectionOptions = {
+  "force new connection": true,
+  reconnectionAttempts: "Infinity",
+  timeout: 10000,
+  transports: ["websocket"],
+};
+
+const Sidebar = ({ setRoomNumber }) => {
   // const classes = useStyles();
   // const [modalStyle] = useState(getModalStyle);
 
+  console.log("CHAT SIDENAR RENDRING");
+
   const [openModal, setOpenModal] = useState(false);
-  const [state, dispatch] = useStateValue();
+  const [roomsList, setRoomsList] = useState([]);
+  // const [state, dispatch] = useStateValue();
 
   const setModal = (e) => {
     e.preventDefault();
     setOpenModal((state) => !state);
   };
 
-  const changeUserRoom = (roomName) => {
-    dispatch({
-      type: "CHANGE_USER_ROOM",
-      roomName: roomName,
-    });
+  const createNewRoom = () => {
+    socket.emit("rooms");
   };
+
+  useEffect(() => {
+    socket = io(END_POINT, connectionOptions);
+
+    socket.on("rooms", (rooms) => {
+      setRoomsList(rooms);
+    });
+
+    socket.emit("rooms", {});
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <div className="side-bar">
@@ -51,15 +75,14 @@ const Sidebar = ({ setRoomNumber, userName }) => {
           Create room
         </Button>
       </div>
-      <div className="side-bar-chats">
-        <ButtonBase style={styles} onClick={() => changeUserRoom("1")}>
-          <SidebarChat roomName={"Room 1"} />
-        </ButtonBase>
-        <ButtonBase style={styles} onClick={() => changeUserRoom("2")}>
-          <SidebarChat roomName={"Room 2"} />
-        </ButtonBase>
-      </div>
 
+      <div className="side-bar-chats">
+        {roomsList?.map((room) => (
+          <ButtonBase style={styles} onClick={() => setRoomNumber(room)}>
+            <SidebarChat roomName={room} />
+          </ButtonBase>
+        ))}
+      </div>
       <div>
         <Modal
           open={openModal}
@@ -68,7 +91,11 @@ const Sidebar = ({ setRoomNumber, userName }) => {
           aria-describedby="simple-modal-description"
         >
           <div>
-            <CreateRoom userName={userName} />
+            <CreateRoom
+              createNewRoom={createNewRoom}
+              setRoomNumber={setRoomNumber}
+              setOpenModal={setOpenModal}
+            />
           </div>
         </Modal>
       </div>

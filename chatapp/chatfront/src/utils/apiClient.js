@@ -16,12 +16,9 @@ export async function register({ username, email, password }) {
   });
   return response.data;
 }
-
-export async function createRoom(roomName, userName) {
-  console.log("ROOM NAME IS ", roomName, userName);
-  const response = await axios.post("http://localhost:3001/createroom", {
-    room: roomName,
-    name: userName,
-  });
+export async function isRoomExists(roomName) {
+  const response = await axios.get(
+    `http://localhost:3001/isroomexist/${roomName}`
+  );
   return response.data;
 }
