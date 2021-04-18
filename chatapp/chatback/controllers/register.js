@@ -8,6 +8,8 @@ const handleRegister = async (req, res, bcrypt) => {
 
   const userExist = await isUserExsists(db, user.email);
 
+  console.log(userExists);
+
   if (userExist) return res.json("User exists");
 
   const saltRounds = 10;
