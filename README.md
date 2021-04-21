@@ -6,7 +6,7 @@ Implementation details:
 
 1. Frontend - React.<br />
 The frontend has 3 pages - signin,register and home-page.<br />
-On successful signin/register the client restore 2 jwt in local storage(refreshToken,accessToken), this tokens can be used to the requests too the server and make them more secured.<br />
+On successful signin/register the client restore 2 jwt in local storage(refreshToken,accessToken), this tokens can be used to the requests to the server and make them more secured.<br />
 The signin page includes Google authentication and regular sign in.<br />
 Libraries:<br />
 1.React-redux and redux toolkit for managing application state.<br />
