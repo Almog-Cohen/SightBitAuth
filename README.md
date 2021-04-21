@@ -32,5 +32,6 @@ Installation details:<br />
 2. The main file authsightbit has 2 files inside of him (authback- backend,authfront- frontend)<br />
 3. You need directory to each of those 2 files and run npm install to download the packages.<br />
 4. Write npm start in each directory to start the server and the client.<br />
+5. The client run on port 3000 and the server run on port 3001
 
 
